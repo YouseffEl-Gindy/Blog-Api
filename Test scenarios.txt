@@ -1,0 +1,260 @@
+===================Sign Up=============================
+POST http://localhost:3000/signup
+Headers:
+Content-Type: application/json
+
+--Happy scenario:
+json body:
+{
+  "name": "Alice",
+  "email": "alice@example.com",
+  "password": "password123",
+  "password_confirmation": "password123"
+}
+
+
+--Unhappy scenario: (passwords don't match)
+json body
+{
+  "name": "Alice",
+  "email": "alice@example.com",
+  "password": "password123",
+  "password_confirmation": "wrongpass"
+}
+
+
+===================Log In=============================
+POST http://localhost:3000/login
+Headers:
+Content-Type: application/json
+
+--Happy scenario:
+json body:
+{
+  "email": "alice@example.com",
+  "password": "password123"
+}
+-Return
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR..."
+}
+
+
+--Unhappy scenario: (password or email is incorrect)
+json body
+{
+  "email": "alice@example.com",
+  "password": "alice1233"
+}
+
+===================Create Post=============================
+POST http://localhost:3000/posts
+Headers:
+Authorization: Bearer [your_token]
+Content-Type: application/json
+
+--Happy scenario:
+json body:
+{
+  "post": {
+    "title": "My First Post",
+    "body": "This is a post about Rails.",
+    "tag_names": ["Rails"]
+  }
+}
+
+
+--Unhappy scenario: (no tags)
+json body
+{
+  "post": {
+    "title": "My First Post",
+    "body": "This is a post about Rails."
+  }
+}
+--Unhappy scenario: (with wrong token or without token(unauthorized))
+Headers: Authorization: Bearer invalid token
+json body
+{
+  "post": {
+    "title": "My First Post",
+    "body": "This is a post about Rails.",
+    "tag_names": ["Rails"]
+  }
+}
+
+
+===================Get All Post=============================
+GET http://localhost:3000/posts
+Headers:
+Authorization: Bearer [your_token]
+
+--Happy scenario:
+-Return
+ALL POSTS THE APP HAS
+
+
+--Unhappy scenario: (with wrong token or without token(unauthorized))
+Headers: Authorization: Bearer invalid token
+-Return (unauthorized)
+
+
+===================Update Post=============================
+PATCH http://localhost:3000/posts/POST_ID
+Headers:
+Authorization: Bearer [your_token]
+Content-Type: application/json
+
+--Happy scenario:
+json body:
+{
+  "post": {
+    "title": "Updated Title",
+    "tag_names": ["Ruby", "Backend"]
+  }
+}
+
+
+--Unhappy scenario: (not owner of post)
+Headers: Authorization: Bearer token belongs to another user
+-Return (unauthorized)
+
+
+
+
+===================Delete Post=============================
+DELETE http://localhost:3000/posts/POST_ID
+Headers:
+Authorization: Bearer [your_token]
+
+--Happy scenario:
+[]
+
+
+--Unhappy scenario: (not owner of post)
+Headers: Authorization: Bearer token belongs to another user
+-Return (unauthorized)
+
+
+
+===================Add Comment=============================
+POST http://localhost:3000/posts/POST_ID/comments
+Headers:
+Authorization: Bearer [your_token]
+Content-Type: application/json
+
+--Happy scenario:
+json body:
+{
+  "comment": {
+    "body": "Nice article!"
+  }
+}
+
+
+--Unhappy scenario: (no body)
+json body:
+{
+  "comment": {
+    "body": ""
+  }
+}
+
+
+
+===================Get Comments of specific post=============================
+GET http://localhost:3000/posts/POST_ID
+Headers:
+Authorization: Bearer [your_token]
+
+
+--Happy scenario:
+-Return 
+ALL COMMENTS
+
+
+--Unhappy scenario: (POST_ID that is not exist)
+-Retrun
+"No Post"
+
+
+
+
+===================Update Comment=============================
+PATCH http://localhost:3000/posts/POST_ID/comments/COMMENT_ID
+Headers:
+Authorization: Bearer [your_token]
+Content-Type: application/json
+
+--Happy scenario:
+{
+  "comment": {
+    "body": "My WebSite limk is www.omarwezo.com Subscribe Please <3"
+  }
+}
+
+
+--Unhappy scenario: (not owner of comment)
+Headers: Authorization: Bearer token belongs to another user
+-Return (You can edit or delete your oun comment)
+
+
+
+
+===================Delete Comment=============================
+DELETE http://localhost:3000/posts/POST_ID/comments/COMMENT_ID
+Headers:
+Authorization: Bearer [your_token]
+
+--Happy scenario:
+[]
+
+
+--Unhappy scenario: (not owner of comment)
+Headers: Authorization: Bearer token belongs to another user
+-Return (You can edit or delete your oun comment)
+
+
+
+===================Delete Comment=============================
+POST http://localhost:3000/logout
+Headers:
+Authorization: Bearer [your_token]
+Content-Type: application/json
+
+--Happy scenario:
+["Logged out successfully"]
+User Token Deleted
+
+
+--Unhappy scenario: (wrong token)
+Headers: Authorization: Bearer token belongs to another user
+-Return (unauthorized)
+
+
+
+
+
+
+
+
+===================Accesing any api endpoints with an old token even if we are signed in and handle our own post or comment =============================
+
+
+--Unhappy scenario: (old token)
+Headers: Authorization: Bearer OLD_TOKEN
+-Return ("Token has been revoked")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
