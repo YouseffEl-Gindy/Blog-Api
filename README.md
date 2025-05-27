@@ -4,7 +4,6 @@
 
 1. Run `docker compose up --build`
 2. The app will be accessible on http://localhost:3000
-3. Run tests: `docker compose exec web rails test`
 
 ## Features
 
