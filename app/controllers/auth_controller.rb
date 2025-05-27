@@ -5,8 +5,7 @@ class AuthController < ApplicationController
   def signup
     user = User.new(user_params)
     if user.save
-      token = JsonWebToken.encode(user_id: user.id)
-      render json: { token: token, user: user }, status: :created
+      render json: { message: "User created successfully", user: user.as_json(only: [:id, :name, :email]) }, status: :created
     else
       render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
     end
